@@ -1,14 +1,18 @@
+# ui/Dockerfile
 FROM node:20-alpine AS development
+
 ENV NODE_ENV development
-# Add a work directory
 WORKDIR /app
-# Cache and Install dependencies
-COPY package.json .
-#COPY yarn.lock .
-RUN yarn install
-# Copy app files
+
+# Copiez package.json et yarn.lock
+COPY package.json yarn.lock ./
+RUN yarn install --frozen-lockfile
+
+# Copiez le reste des fichiers
 COPY . .
-# Expose port
+
+# Exposez le port
 EXPOSE 3000
-# Start the app
-CMD [ "yarn", "start" ]
+
+# Démarrez l'application
+CMD ["yarn", "dev"]

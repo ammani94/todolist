@@ -52,9 +52,12 @@ services:
       context: ./ui
       target: development
     volumes:
-      - ./ui/src:/app/src
+      - ./ui:/var/www/app
+      #- /var/www/app/node_modules
     ports:
       - 3000:3000
+    stdin_open: true
+    tty: true
   
 volumes:
   db_data:
