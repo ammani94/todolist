@@ -42,7 +42,6 @@ services:
   app:
     container_name: app-dev
     platform: linux/amd64
-    image: app-dev
     build:
       context: ./ui
       target: development
