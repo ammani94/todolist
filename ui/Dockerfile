@@ -2,7 +2,7 @@
 FROM node:20-alpine AS development
 
 ENV NODE_ENV development
-WORKDIR /app
+WORKDIR /var/www/app
 
 # Copiez package.json et yarn.lock
 COPY package.json yarn.lock ./

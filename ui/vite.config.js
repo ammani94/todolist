@@ -17,5 +17,8 @@ export default defineConfig({
     host: '0.0.0.0',  // Écoute sur toutes les interfaces réseau
     port: 5173,       // Port par défaut de Vite
     strictPort: true, // Échoue si le port est déjà utilisé
+    watch: {
+      usePolling: true,  // Force Vite à utiliser le polling pour détecter les changements
+    },
   },
 })
