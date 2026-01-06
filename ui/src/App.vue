@@ -1,11 +1,17 @@
-<script setup></script>
+<script setup>
+  import AppHeader from './components/AppHeader.vue';
+</script>
 
 <template>
-  <h1>You did it! 2 </h1>
+  <AppHeader />
+  <main>
+    <router-view />
+  </main>
+  <!-- <h1>You did it! 2 </h1>
   <p>
     Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
     documentation
-  </p>
+  </p> -->
 </template>
 
 <style scoped></style>
