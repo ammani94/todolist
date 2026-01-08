@@ -1,17 +1,14 @@
 <script setup>
+  import { useRoute } from 'vue-router'
   import AppHeader from './components/AppHeader.vue';
+  const route = useRoute();
 </script>
 
 <template>
-  <AppHeader />
+  <AppHeader v-if="!route.meta.hideHeader" />
   <main>
     <router-view />
   </main>
-  <!-- <h1>You did it! 2 </h1>
-  <p>
-    Visit <a href="https://vuejs.org/" target="_blank" rel="noopener">vuejs.org</a> to read the
-    documentation
-  </p> -->
 </template>
 
 <style scoped></style>

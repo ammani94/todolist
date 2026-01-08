@@ -11,36 +11,33 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
 
-class ApiController extends AbstractController
+class ApiAuthController extends AbstractController
 {
-    #[Route('/api/formulaire')]
+    #[Route('/login')]
     public function handleForm(Request $request,EntityManagerInterface $entityManager,UserPasswordHasherInterface $passwordHasher): Response
     {
         $data = json_decode($request->getContent(), true);
-        
-        if (count($data) > 0) {
-            $users = new Users();
-            $hashedPassword = $passwordHasher->hashPassword(
+        $repository = $entityManager->getRepository(Users::class);
+        $users = new Users();
+        $hashedPassword = $passwordHasher->hashPassword(
             $users,
             $data['password']
         );
-            $users->setUsername($data['username']);
-            $users->setPassword($hashedPassword);
-            $users->setMessage($data['message']);
-
-            $entityManager->persist($users);
-
-            $entityManager->flush();
+        
+        $User = $repository->findOneBy(['username' => $data['username'], 'password' => $hashedPassword]);
+        if ($User !== null) {
             return $this->json([
                 'success' => true,
-                'message' => 'Données reçues avec succès !',
-                'id' => $users->getId(),
+                'message' => 'Données présentes !',
+                'id' => $User,
             ]);
         }
-            return $this->json([
-                'success' => false,
-                'message' => 'Erreur',
-                'data' => $data,
-            ]);        
+        return $this->json([
+            'success' => false,
+            'message' => 'Données présentes !',
+            'id' => $User,
+        ]);
+            
+        
     }
 }

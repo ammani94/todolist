@@ -12,3 +12,7 @@ kernel:
 api_data:
     path: /api/formulaire
     controller: App\Controller\ApiController::handleForm
+
+login:
+    path: /login
+    controller: App\Controller\ApiAuthController::handleForm
