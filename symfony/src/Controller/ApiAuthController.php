@@ -23,18 +23,17 @@ class ApiAuthController extends AbstractController
             $users,
             $data['password']
         );
-        
-        $User = $repository->findOneBy(['username' => $data['username'], 'password' => $hashedPassword]);
+        $User = $repository->findOneBy(['username' => $data['username'], 'password' => $data['password']]);
         if ($User !== null) {
             return $this->json([
                 'success' => true,
-                'message' => 'Données présentes !',
+                'message' => 'Connexion OK',
                 'id' => $User,
             ]);
         }
         return $this->json([
             'success' => false,
-            'message' => 'Données présentes !',
+            'message' => 'Connexion KO',
             'id' => $User,
         ]);
             

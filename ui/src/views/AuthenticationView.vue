@@ -1,10 +1,11 @@
 <script setup>
-import { ref, toRaw } from 'vue';
+import { ref, toRaw } from 'vue'
+import { useRouter } from 'vue-router'
 const formData = ref({
   username: '',
   password: ''
-});
-
+})
+const router = useRouter()
 const submitForm = async () => {
   try {
     const response = await fetch('http://localhost:8080/login', {
@@ -16,8 +17,12 @@ const submitForm = async () => {
     });
 
     const result = await response.json();
-    console.log(response);
-    alert('Formulaire envoyé avec succès !');
+    //console.log(result);
+    //alert(result.message);
+    console.log('success',result);
+    if (result.success) {
+        router.push({name: 'home'})
+    }
   } catch (error) {
     console.error('Erreur :', error);
     alert('Une erreur est survenue.');
