@@ -13,3 +13,11 @@ controllers:
 api_data:
     path: /api/formulaire
     controller: App\Controller\ApiController::handleForm
+
+add_todolist:
+    path: /add_todolist
+    controller: App\Controller\TodolistController::insertData
+
+fetch_lists:
+    path: /fetch
+    controller: App\Controller\TodolistController::fetchList

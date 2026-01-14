@@ -17,9 +17,6 @@ const submitForm = async () => {
     });
 
     const result = await response.json();
-    //console.log(result);
-    //alert(result.message);
-    console.log('success',result);
     if (result.success) {
         router.push({name: 'home'})
     }

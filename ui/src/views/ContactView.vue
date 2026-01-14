@@ -8,7 +8,6 @@ const formData = ref({
 
 const submitForm = async () => {
   try {
-    console.log('Données envoyées :', toRaw(formData.value));
     const response = await fetch('http://localhost:8080/api/formulaire', {
       method: 'POST',
       headers: {
@@ -18,7 +17,6 @@ const submitForm = async () => {
     });
 
     const result = await response.json();
-    console.log('Réponse du serveur :', result);
     alert('Formulaire envoyé avec succès !');
   } catch (error) {
     console.error('Erreur :', error);
