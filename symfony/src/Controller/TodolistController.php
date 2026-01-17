@@ -9,6 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\Todolist;
+use App\Entity\TodolistItems;
 use Doctrine\ORM\EntityManagerInterface;
 
 class TodolistController extends AbstractController
@@ -17,7 +18,6 @@ class TodolistController extends AbstractController
     public function insertData(Request $request,EntityManagerInterface $entityManager): Response
     {
         $data = json_decode($request->getContent(), true);
-        error_log(print_r($data,1));
         $Todolist = new Todolist();
         
         $Todolist->setName($data['name']);
@@ -53,5 +53,65 @@ class TodolistController extends AbstractController
             'success' => true,
             'todolists' => $todolistsArray,
         ]);
+    }
+
+    #[Route('/fetch/todolist/{id}')]
+    public function fetchTodolist(EntityManagerInterface $entityManager, int $id): Response
+    {
+        $repository = $entityManager->getRepository(TodolistItems::class);
+        
+        $todolist = $repository->findBy(
+            ['todolist_id' => $id]
+        );
+        
+        $todolistsArray = array_map(function ($todolist) {
+            return [
+                'id' => $todolist->getId(),
+                'name' => $todolist->getName()
+            ];
+        }, $todolist);
+        return $this->json([
+            'success' => true,
+            'todolists' => $todolistsArray,
+        ]);
+    }
+
+    #[Route('/add_todolistItem/{id}')]
+    public function insertDataTodolistItem(Request $request,EntityManagerInterface $entityManager, int $id): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        
+        $Todolist = new TodolistItems();
+        $Todolist->setName($data['name']);
+        $Todolist->setTodolistId($id);
+        
+        $entityManager->persist($Todolist);
+
+        $entityManager->flush();
+        return $this->json([
+        'success' => true,
+        'message' => 'Création item OK',
+        'todolist' => [
+            'id' => $Todolist->getId(),
+            'name' => $Todolist->getName()
+            ],
+        ]);
+    }
+
+    #[Route('/delete_todolistItem/{id}')]
+    public function deleteDataTodolistItem(Request $request,EntityManagerInterface $entityManager, int $id)
+    {
+        $repository = $entityManager->getRepository(TodolistItems::class);
+        $product = $repository->find($id);
+        if ($product) {
+            $entityManager->remove($product);
+            $entityManager->flush();
+            return $this->fetchTodolist($entityManager, $id);
+        } else {
+            return $this->json([
+                'success' => false,
+                'message' => 'Élément non trouvé'
+            ]);
+        }
     }
 }

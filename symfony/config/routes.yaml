@@ -21,3 +21,21 @@ add_todolist:
 fetch_lists:
     path: /fetch
     controller: App\Controller\TodolistController::fetchList
+
+fetch_todo_lists:
+    path: /fetch/todolist/{id}
+    controller: App\Controller\TodolistController::fetchTodolist
+    requirements:
+        id: '\d+'
+
+add_todolist_item:
+    path: /add_todolistItem/{id}
+    controller: App\Controller\TodolistController::insertDataTodolistItem
+    requirements:
+        id: '\d+'
+
+delete_todolist_item:
+    path: /delete_todolistItem/{id}
+    controller: App\Controller\TodolistController::deleteDataTodolistItem
+    requirements:
+        id: '\d+'

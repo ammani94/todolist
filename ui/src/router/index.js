@@ -7,7 +7,7 @@ import AuthenticationView from '../views/AuthenticationView.vue';
 const routes = [
   { path: '/', name: 'authentification', component: AuthenticationView, meta: { hideHeader: true } },
   { path: '/home', name: 'home', component: HomeView },
-  { path: '/about', name: 'about', component: AboutView },
+  { path: '/about/:id', name: 'about', component: AboutView },
   { path: '/contact', name: 'contact', component: ContactView },
 ];
 
