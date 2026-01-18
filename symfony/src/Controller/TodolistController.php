@@ -114,4 +114,31 @@ class TodolistController extends AbstractController
             ]);
         }
     }
+
+    #[Route('/delete_todolist/{id}')]
+    public function deleteDataTodolist(Request $request,EntityManagerInterface $entityManager, int $id)
+    {
+        $repository = $entityManager->getRepository(TodolistItems::class);
+        
+        $todolist = $repository->findBy(
+            ['todolist_id' => $id]
+        );
+        foreach($todolist as $key => $object) {
+            $entityManager->remove($object);
+            $entityManager->flush();
+        }
+
+        $repository = $entityManager->getRepository(Todolist::class);
+        $product = $repository->find($id);
+        if ($product) {
+            $entityManager->remove($product);
+            $entityManager->flush();
+            return $this->fetchTodolist($entityManager, $id);
+        } else {
+            return $this->json([
+                'success' => false,
+                'message' => 'Élément non trouvé'
+            ]);
+        }
+    }
 }

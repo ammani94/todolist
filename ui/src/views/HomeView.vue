@@ -17,6 +17,27 @@ const fetchTodolists = async () => {
     console.error('Erreur lors de la récupération des données :', error)
   }
 }
+
+const deleteItem = async(id) => {
+    try {
+    const response = await fetch('http://localhost:8080/delete_todolist/'+id, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(toRaw(formData.value)),
+    });
+
+    const result = await response.json()
+    if (result.success) {
+        todolists.value = todolists.value.filter((item) => item.id !== id);
+    }
+  } catch (error) {
+    console.error('Erreur :', error);
+    alert('Une erreur est survenue.');
+  }
+}
+
 const submitForm = async () => {
   try {
     const response = await fetch('http://localhost:8080/add_todolist', {
@@ -51,6 +72,9 @@ onMounted(fetchTodolists)
     <ul>
       <li v-for="todolist in todolists" :key="todolist.id">
         <router-link :to="todolist.path">{{ todolist.name }}</router-link>
+        <form @submit.prevent="() => deleteItem(todolist.id)">
+    <button type="submit">-</button>
+  </form>
       </li>
     </ul>
   </div>

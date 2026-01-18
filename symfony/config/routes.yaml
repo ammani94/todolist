@@ -39,3 +39,9 @@ delete_todolist_item:
     controller: App\Controller\TodolistController::deleteDataTodolistItem
     requirements:
         id: '\d+'
+
+delete_todolist:
+    path: /delete_todolist/{id}
+    controller: App\Controller\TodolistController::deleteDataTodolist
+    requirements:
+        id: '\d+'
