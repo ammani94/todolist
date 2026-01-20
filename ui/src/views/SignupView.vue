@@ -8,7 +8,7 @@ const formData = ref({
 const router = useRouter()
 const submitForm = async () => {
   try {
-    const response = await fetch('http://localhost:8080/login', {
+    const response = await fetch('http://localhost:8080/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -17,10 +17,13 @@ const submitForm = async () => {
     });
 
     const result = await response.json();
+    
     if (result.success) {
-        router.push({name: 'home'})
+        router.push({name: 'authentification'})
     } else {
-      alert(result.message)
+        alert(result.message)
+        formData.username = ''
+        formData.password = ''
     }
   } catch (error) {
     console.error('Erreur :', error);
@@ -30,14 +33,11 @@ const submitForm = async () => {
 </script>
 
 <template>
-  <div class="authentification">
+  <div class="signup">
     <form @submit.prevent="submitForm">
     <input v-model="formData.username" placeholder="Identifiant" required />
     <input v-model="formData.password" type="password" placeholder="Mot de passe" required />
-    <button type="submit">Se connecter</button>
+    <button type="submit">Créer le compte</button>
   </form>
-  </div>
-  <div class="signup">
-    <router-link to="/signup">Créer un compte</router-link>
   </div>
 </template>
