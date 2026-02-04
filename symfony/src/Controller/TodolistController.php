@@ -11,6 +11,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\Todolist;
 use App\Entity\TodolistItems;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class TodolistController extends AbstractController
 {
@@ -37,10 +38,11 @@ class TodolistController extends AbstractController
     }
 
     #[Route('/fetch')]
-    public function fetchList(EntityManagerInterface $entityManager): Response
+    public function fetchList(EntityManagerInterface $entityManager,SessionInterface $session): Response
     {
         $todolists = $entityManager->getRepository(Todolist::class)->findAll();
-
+        $user_id = $session->get('user_id');
+        error_log('user_id = '.$user_id);
         $todolistsArray = array_map(function ($todolist) {
             return [
                 'id' => $todolist->getId(),

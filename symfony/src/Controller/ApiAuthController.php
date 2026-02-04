@@ -17,7 +17,7 @@ class ApiAuthController extends AbstractController
     public function login(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $data = json_decode($request->getContent(), true);
-
+        $session = $request->getSession();
         if (empty($data['username']) || empty($data['password'])) {
             return $this->json([
                 'success' => false,
@@ -33,7 +33,8 @@ class ApiAuthController extends AbstractController
                 'message' => 'Nom d\'utilisateur ou mot de passe incorrect',
             ], 401);
         }
-
+        $session->set('user_id', $user->getId());
+        $session->set('user_username', $user->getUsername());
         return $this->json([
             'success' => true,
             'message' => 'Connexion réussie',

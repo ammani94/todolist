@@ -22,6 +22,7 @@ const deleteItem = async(id) => {
     try {
     const response = await fetch('http://localhost:8080/delete_todolist/'+id, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
@@ -42,6 +43,7 @@ const submitForm = async () => {
   try {
     const response = await fetch('http://localhost:8080/add_todolist', {
       method: 'POST',
+      credentials: 'include',
       headers: {
         'Content-Type': 'application/json',
       },
