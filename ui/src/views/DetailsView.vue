@@ -15,7 +15,6 @@ const fetchTodolists = async () => {
     if (result.success) {
       todolists.value = result.todolists
     }
-    console.log(todolists)
   } catch (error) {
     console.error('Erreur lors de la récupération des données :', error)
   }

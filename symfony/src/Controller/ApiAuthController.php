@@ -10,14 +10,14 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use App\Entity\Users;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 class ApiAuthController extends AbstractController
 {
     #[Route('/login')]
-    public function login(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher): Response
+    public function login(Request $request, EntityManagerInterface $entityManager, UserPasswordHasherInterface $passwordHasher, SessionInterface $session): Response
     {
         $data = json_decode($request->getContent(), true);
-        $session = $request->getSession();
         if (empty($data['username']) || empty($data['password'])) {
             return $this->json([
                 'success' => false,
@@ -83,6 +83,39 @@ class ApiAuthController extends AbstractController
             'user' => [
                 'id' => $user->getId(),
                 'username' => $user->getUsername(),
+            ],
+        ]);
+    }
+
+    #[Route('/logout')]
+    public function logout(SessionInterface $session): Response
+    {
+        $session->clear();
+
+        return $this->json([
+            'success' => true,
+            'message' => 'Déconnexion réussie',
+        ]);
+    }
+
+    #[Route('/user')]
+    public function GetUserData(SessionInterface $session): Response
+    {
+        $userId = $session->get('user_id');
+        $userUsername = $session->get('user_username');
+
+        if ($userId === null) {
+        return $this->json([
+            'success' => false,
+            'message' => 'Aucune session active',
+        ], 401);
+    }
+
+        return $this->json([
+            'success' => true,
+            'user' => [
+                'id' => $userId,
+                'username' => $userUsername,
             ],
         ]);
     }

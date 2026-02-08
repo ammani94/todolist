@@ -53,3 +53,11 @@ signup:
 login:
     path: /login
     controller: App\Controller\ApiAuthController::login
+
+user:
+    path: /user
+    controller: App\Controller\ApiAuthController::GetUserData
+
+logout:
+    path: /logout
+    controller: App\Controller\ApiAuthController::logout

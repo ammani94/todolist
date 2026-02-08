@@ -16,13 +16,14 @@ use Symfony\Component\HttpFoundation\Session\SessionInterface;
 class TodolistController extends AbstractController
 {
     #[Route('/add_todolist')]
-    public function insertData(Request $request,EntityManagerInterface $entityManager): Response
+    public function insertData(Request $request,EntityManagerInterface $entityManager,SessionInterface $session): Response
     {
         $data = json_decode($request->getContent(), true);
+        $userId = $session->get('user_id');
         $Todolist = new Todolist();
         
         $Todolist->setName($data['name']);
-        
+        $Todolist->setUserId($userId);
         $entityManager->persist($Todolist);
 
         $entityManager->flush();
@@ -40,14 +41,22 @@ class TodolistController extends AbstractController
     #[Route('/fetch')]
     public function fetchList(EntityManagerInterface $entityManager,SessionInterface $session): Response
     {
-        $todolists = $entityManager->getRepository(Todolist::class)->findAll();
-        $user_id = $session->get('user_id');
-        error_log('user_id = '.$user_id);
+        $userId = $session->get('user_id');
+        $userUsername = $session->get('user_username');
+        if (!$userId) {
+            return $this->json([
+                'success' => false,
+                'message' => 'Non autorisé',
+            ], 401);
+        }
+        $todolists = $entityManager->getRepository(Todolist::class)->findBy(
+            ['user_id' => $userId]
+        );
         $todolistsArray = array_map(function ($todolist) {
             return [
                 'id' => $todolist->getId(),
                 'name' => $todolist->getName(),
-                'path' => '/about/' . $todolist->getId(),
+                'path' => '/details/' . $todolist->getId(),
             ];
         }, $todolists);
 

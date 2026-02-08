@@ -2,6 +2,10 @@
   <header class="app-header">
     <div class="header-content">
       <h1>{{ title }}</h1>
+      <div class="user-actions">
+          <span> Bonjour, {{ userAccount.username }}</span>
+          <button @click="logout" class="logout-button">Déconnexion</button>
+      </div>
       <nav>
         <ul>
           <li v-for="link in navLinks" :key="link.path">
@@ -14,12 +18,55 @@
 </template>
 
 <script setup>
+import { ref, toRaw, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+const router = useRouter()
 const title = "ToDoList"
 const navLinks = [
   { path: "/", text: "Accueil"},
-  { path: "/about", text: "À propos" },
   { path: "/contact", text: "Contact" },
-];
+]
+let userAccount = ref([])
+const user = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/user', {
+      method: 'GET',
+      credentials: 'include',
+    })
+    const result = await response.json()
+    if (result.success) {
+      userAccount.value = result.user
+      console.log(userAccount.value)
+    } else {
+      router.push({name: 'authentification'})
+    }
+  } catch (error) {
+    console.error('Erreur lors de la récupération des données :', error)
+  }
+}
+
+const logout = async () => {
+  try {
+    const response = await fetch('http://localhost:8080/logout', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+
+    const result = await response.json()
+    if (result.success) {
+        router.push({name: 'authentification'})
+    }
+  } catch (error) {
+    console.error('Erreur :', error);
+    alert('Une erreur est survenue.');
+  }
+};
+
+
+onMounted(user)
 </script>
 
 <style scoped>

@@ -8,7 +8,10 @@ let todolists = ref([]);
 const router = useRouter()
 const fetchTodolists = async () => {
   try {
-    const response = await fetch('http://localhost:8080/fetch');
+    const response = await fetch('http://localhost:8080/fetch', {
+      method: 'GET',
+      credentials: 'include',
+    })
     const result = await response.json()
     if (result.success) {
       todolists.value = result.todolists
@@ -30,6 +33,7 @@ const deleteItem = async(id) => {
     });
 
     const result = await response.json()
+    
     if (result.success) {
         todolists.value = todolists.value.filter((item) => item.id !== id);
     }
@@ -59,7 +63,7 @@ const submitForm = async () => {
     console.error('Erreur :', error);
     alert('Une erreur est survenue.');
   }
-};
+}
 onMounted(fetchTodolists)
 
 </script>
